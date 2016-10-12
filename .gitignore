@@ -1,2 +1,6 @@
+# ignore spyder files
 .spyderworkspace
 .spyderproject
+
+# ignore pycharm files
+.idea/*
