@@ -43,10 +43,25 @@ if __name__ == "__main__":
     for_each_event(cals[0], add_event_uid)
 
 
-    def get_if_updated_event(component):
+    def get_if_new_event(component):
         if component.get("uid") in events_uids:
             print("l'évènemnt " + component.get("summary") + " existait déjà")
+            return False
         else:
             print("l'évènemnt " + component.get("summary") + " est nouveau")
+            return True
 
-    for_each_event(cals[1], get_if_updated_event)
+    #for_each_event(cals[1], get_if_new_event)
+
+    def get_if_new_or_updated(component):
+        if get_if_new_event(component):
+            return True
+        else:
+            if events_uids[component.get("uid")] == component.decoded("LAST-MODIFIED"):
+                print("\tl'évènemnt n'a pas été modifié")
+                return False
+            else:
+                print("\tl'évènemnt a été modifié")
+                return True
+
+    for_each_event(cals[1], get_if_new_or_updated)
