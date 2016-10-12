@@ -23,7 +23,7 @@ if __name__ == "__main__":
     cals = []
     for i in 0,1:
         try:
-            f = open(sys.argv[i+1], 'r')
+            f = open(sys.argv[i+1], 'r', encoding="utf-8")
             cals.append(Calendar.from_ical(f.read()))
         except FileNotFoundError:
             print("File " + sys.argv[i + 1] + " not found")
