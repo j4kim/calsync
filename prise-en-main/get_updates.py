@@ -1,17 +1,18 @@
 from icalendar import Calendar
 
 
+def print_event(component):
+    print("Event : " + component.get("summary"))
+    print("Starts at " + str(component.decoded("dtstart")))
+    print("Ends at " + str(component.decoded("dtend")))
+    print("last modified : " + str(component.decoded("LAST-MODIFIED")))
+    print("ID : " + component.get("uid"))
+    print("***")
 
-def print_events(cal):
+def for_each_event(cal, func):
     for component in cal.walk():
         if component.name == "VEVENT":
-            print("Event : " + component.get("summary"))
-            print("Starts at " + str(component.decoded("dtstart")))
-            print("Ends at " + str(component.decoded("dtend")))
-            print("last modified : " + str(component.decoded("LAST-MODIFIED")))
-            print("ID : " + component.get("uid"))
-            print("***")
-
+            func(component)
 
 if __name__ == "__main__":
     global envents_uids
@@ -29,21 +30,23 @@ if __name__ == "__main__":
             sys.exit(-2)
 
     # print("INITIAL CALENDAR : ")
-    # print_events(cals[0])
+    # for_each_event(cals[0], print_event)
     # print("UPDATED CALENDAR : ")
-    # print_events(cals[1])
+    # for_each_event(cals[1], print_event)
 
     # dictionnaire avec clé:uid d'un event et valeur:date de modification
     events_uids = {}
 
+    def add_event_uid(component):
+        events_uids[component.get("uid")] = component.decoded("LAST-MODIFIED")
 
-    for component in cals[0].walk():
-        if component.name == "VEVENT":
-            events_uids[component.get("uid")] = component.decoded("LAST-MODIFIED")
+    for_each_event(cals[0], add_event_uid)
 
-    for component in cals[1].walk():
-        if component.name == "VEVENT":
-            if component.get("uid") in events_uids:
-                print("l'évènemnt " + component.get("summary") + " existait déjà")
-            else:
-                print("l'évènemnt " + component.get("summary") + " est nouveau")
+
+    def get_if_updated_event(component):
+        if component.get("uid") in events_uids:
+            print("l'évènemnt " + component.get("summary") + " existait déjà")
+        else:
+            print("l'évènemnt " + component.get("summary") + " est nouveau")
+
+    for_each_event(cals[1], get_if_updated_event)
