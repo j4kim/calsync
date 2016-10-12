@@ -9,16 +9,17 @@ def print_event(component):
     print("ID : " + component.get("uid"))
     print("***")
 
+
 def for_each_event(cal, func):
     for component in cal.walk():
         if component.name == "VEVENT":
             func(component)
 
+
 if __name__ == "__main__":
-    global envents_uids
     import sys
-    if len(sys.argv) < 4:
-        print("need 3 arguments : file1.ics file2.ics output.ics")
+    if len(sys.argv) < 3:
+        print("need 2 arguments : file1.ics file2.ics")
         sys.exit(-1)
     cals = []
     for i in 0,1:
