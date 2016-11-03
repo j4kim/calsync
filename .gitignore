@@ -4,6 +4,7 @@
 
 # ignore pycharm files
 .idea/*
+*.pyc
 
 # secret file for google api
-client_secret.json
+# client_secret.json
