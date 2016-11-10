@@ -1,10 +1,8 @@
 import datetime
 
-import httplib2
 import icalendar
-from googleapiclient import discovery
 
-from google_api_tools import get_credentials
+from google_api_tools import get_service
 
 
 class Calendar:
@@ -16,7 +14,8 @@ class Calendar:
         if not self.events:
             print('No upcoming events found.')
         for event in self.events:
-            start = event['start'].get('dateTime')
+            # récupère la date et l'heure si dispo, sinon seulement la date
+            start = event['start'].get('dateTime',event['start'].get('date'))
             print(start, event['summary'])
 
 
@@ -36,9 +35,7 @@ class IcsCalendar(Calendar):
 
 class GoogleCalendar(Calendar):
     def __init__(self):
-        credentials = get_credentials()
-        http = credentials.authorize(httplib2.Http())
-        self.service = discovery.build('calendar', 'v3', http=http)
+        self.service = get_service()
 
     def read_events(self):
         now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time

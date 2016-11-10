@@ -50,6 +50,12 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
+
+def get_service():
+    credentials = get_credentials()
+    http = credentials.authorize(httplib2.Http())
+    return discovery.build('calendar', 'v3', http=http)
+
 def main():
     """Shows basic usage of the Google Calendar API.
 
