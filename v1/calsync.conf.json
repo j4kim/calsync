@@ -1,0 +1,23 @@
+{
+	"definitions":{
+		"A":{
+			"type":"ics",
+			"path":"ivan_igrac_cal.ics"
+		},
+		"B":{
+			"type":"google",
+			"id":"3mnnljsfhcu14k8n398h9o4oh8@group.calendar.google.com"
+		},
+		"C":{
+			"type":"google",
+			"id":"primary"
+		}
+	},
+	"rules":[
+		{
+			"operation":"+",
+			"operands":["A","B"],
+			"destination":"C"
+		}
+	]
+}
