@@ -1,7 +1,7 @@
 from datetime import date, datetime, timezone
 
 import icalendar
-from icalendar import vDatetime, vDate, vDDDTypes
+from icalendar import vDatetime, vDate, vDDDTypes, Event
 
 from google_api_tools import get_service
 
@@ -45,7 +45,18 @@ class IcsCalendar(Calendar):
                 self.events.append(event)
 
     def write_event(self, event):
-        pass
+        e = Event()
+        e.add('summary', event['summary'])
+
+        for param in ["start","end"]:
+            d_str = event[param].get('dateTime', event[param].get('date'))
+            date = datetime.strptime(d_str, "%Y-%m-%d")
+            e.add('dt'+param, date)
+
+        self.ical.add_component(e)
+
+        with open('./out.ics', 'wb') as f:
+            f.write(self.ical.to_ical())
 
 
 class GoogleCalendar(Calendar):

@@ -43,5 +43,7 @@ if __name__ == "__main__":
         }
         #calendars['B'].write_event(e)
 
-        for e in calendars['A'].events:
-            calendars['B'].write_event(e)
+        # for e in calendars['A'].events:
+        #     calendars['B'].write_event(e)
+
+        calendars['A'].write_event(e)
