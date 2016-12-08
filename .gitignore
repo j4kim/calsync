@@ -8,3 +8,6 @@
 
 # secret file for google api
 # client_secret.json
+
+*.pyproj
+*.sln
