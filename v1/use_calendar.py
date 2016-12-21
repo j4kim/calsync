@@ -32,18 +32,21 @@ if __name__ == "__main__":
         #calendars["C"].write_event(e1)
         #calendars["C"].write_event(e2)
 
-        e = {
-            'start': {
-                'date': '2016-12-20'
-            },
-            'end': {
-                'date': '2016-12-21'
-            },
-            'summary': 'Yolo'
-        }
+        # e = {
+        #     'start': {
+        #         'date': '2016-12-27'
+        #     },
+        #     'end': {
+        #         'date': '2016-12-28'
+        #     },
+        #     'summary': 'COUCOU LOL'
+        # }
         #calendars['B'].write_event(e)
 
-        # for e in calendars['A'].events:
-        #     calendars['B'].write_event(e)
+        for e in calendars['A'].events:
+            calendars['B'].write_event(e)
 
-        calendars['A'].write_event(e)
+        # calendars['A'].write_event(e)
+        #
+        # for e in calendars['B'].events:
+        #     print(e)
