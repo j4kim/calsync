@@ -50,3 +50,5 @@ if __name__ == "__main__":
         #
         # for e in calendars['B'].events:
         #     print(e)
+
+        # print(calendars['A'])

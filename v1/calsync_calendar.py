@@ -22,12 +22,15 @@ class Calendar:
             start = event['start'].get('dateTime', event['start'].get('date'))
             print(start, event['summary'])
 
-    def is_new(self, uid):
-        return uid not in self.events_uids
-
     # TODO
-    def is_new_or_updated(self, uid):
-        return self.is_new(uid)
+    def is_new_or_updated(self, event):
+        # check if event does not already exists
+        if event["iCalUID"] not in self.events_uids:
+            return True
+        # if the event exists, check if the updated datetime has changed
+        if self.events_uids[event["iCalUID"]] != event["updated"]:
+            return True
+        return False
 
 
 
@@ -59,7 +62,6 @@ class IcsCalendar(Calendar):
                 self.events_uids[uid] = updated # datetime object
                 event["iCalUID"] = uid
                 event["updated"] = updated.isoformat() + '.000Z' # c'est dla merde mais j'en ai vraiment marre
-                print("yo "+event["updated"])
 
                 self.events.append(event)
 
@@ -100,6 +102,11 @@ class GoogleCalendar(Calendar):
             orderBy='startTime').execute()
         self.events = eventsResult.get('items', [])
 
+        for e in self.events:
+            uid = e["iCalUID"]
+            updated = e["updated"]
+            self.events_uids[uid] = dateutil.parser.parse(updated)
+
     def list_calendars(self):
         page_token = None
         while True:
@@ -111,8 +118,11 @@ class GoogleCalendar(Calendar):
                 break
 
     def write_event(self, event):
+        # print("events : {}".format(self.events))
+        # print("event to write : {}".format(event))
+        # print("events uid : {}".format(self.events_uids))
 
-        if self.is_new_or_updated(event["iCalUID"]):
+        if self.is_new_or_updated(event):
             event['summary'] += " (Calsync)"
             e = self.service.events().insert(calendarId=self.id, body=event).execute()
             print('Event created: %s' % (e.get('htmlLink')))
