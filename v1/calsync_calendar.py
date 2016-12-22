@@ -23,9 +23,9 @@ class Calendar:
 
     def is_new(self, uid):
         # check if event does not already exists
-        return uid not in self.events:
+        return uid not in self.events
 
-    def is_updated(self, uid, update_datetime)
+    def is_updated(self, uid, update_datetime):
         # if the event exists, check if the updated datetime has changed
         return self.events[uid]["updated"] < update_datetime
 
@@ -59,20 +59,26 @@ class IcsCalendar(Calendar):
 
 
     def write_event(self, event):
-        e = Event()
-        e.add('summary', event['summary'])
 
-        for param in ["start","end"]:
-            dd = event[param] # date or datetime
-            e.add('dt'+param, dd)
+        print("event to write :", event)
 
-        e.add('uid', event["iCalUID"]);
-        e.add('LAST-MODIFIED', event["updated"])
+        if self.is_new(event["iCalUID"]):
+            # convert calscync event to ical event
 
-        if self.is_new(uid):
+            e = Event()
+            e.add('summary', event['summary'])
+
+            for param in ["start","end"]:
+                dd = event[param] # date or datetime
+                e.add('dt'+param, dd)
+
+            e.add('uid', event["iCalUID"]);
+            e.add('LAST-MODIFIED', event["updated"])
+
             self.ical.add_component(e)
             with open(self.path + ".out", 'wb') as f:
                 f.write(self.ical.to_ical())
+                print("event writed")
         else:
             print("l'event existe deja")
 
@@ -96,6 +102,12 @@ class GoogleCalendar(Calendar):
 
         for e in g_events:
             e["updated"] = dateutil.parser.parse(e["updated"]) # convertit la str en datetime
+            for param in ["start", "end"]:
+                # les events Google contiennent soit une date, soit une datetime pour les propriétés start et end
+                if "dateTime" in e[param]:
+                    e[param] = dateutil.parser.parse(e[param]["dateTime"]) # convertit la string en datetime
+                elif "date" in e[param]:
+                    e[param] = dateutil.parser.parse(e[param]["date"]).date() # convertit la string en datetime, puis ne récupère que la date
             self.events[e["iCalUID"]] = e
 
     def list_calendars(self):
