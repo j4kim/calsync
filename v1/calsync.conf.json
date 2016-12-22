@@ -2,7 +2,7 @@
 	"definitions":{
 		"A":{
 			"type":"ics",
-			"path":"ivan_igrac_cal.ics"
+			"path":"cal5.t3st.ics"
 		},
 		"B":{
 			"type":"google",
