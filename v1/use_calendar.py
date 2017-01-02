@@ -14,7 +14,7 @@ if __name__ == "__main__":
                 calendars[key] = (GoogleCalendar(params["id"]))
         for k, cal in calendars.items():
             print("{} ({})".format(k, cal.__class__.__name__))
-            cal.read_events()
+            #cal.read_events()
             cal.print_events()
 
         print("Rules :")
@@ -43,10 +43,12 @@ if __name__ == "__main__":
         # }
         #calendars['B'].write_event(e)
 
-        for e in calendars['A'].events:
-            calendars['B'].write_event(e)
+        for uid, e in calendars['B'].events.items():
+            calendars['A'].write_event(e)
 
         # calendars['A'].write_event(e)
         #
         # for e in calendars['B'].events:
         #     print(e)
+
+        # print(calendars['A'])
