@@ -1,4 +1,6 @@
-from calsync_calendar import IcsCalendar, GoogleCalendar, CalsyncCalendar
+from calsync_calendar import CalsyncCalendar
+from ics_calendar import IcsCalendar
+from google_calendar import GoogleCalendar
 import json
 
 if __name__ == "__main__":
@@ -6,7 +8,7 @@ if __name__ == "__main__":
     with open("./calsync.conf.json", encoding="utf-8") as f:
         calendars = {}
         config = json.loads(f.read())
-        print("Definitions :")
+        print("{:*<53}".format("Definitions "))
         for key, params in config["definitions"].items():
             if params["type"] == "ics":
                 calendars[key] = (IcsCalendar(key, params["path"]))
@@ -16,16 +18,15 @@ if __name__ == "__main__":
             #cal.read_events()
             print(cal)
 
-        print("Rules :")
         for i, rule in enumerate(config["rules"]):
-            print("rule {} : {} = {} {}".format(
-                i,
+            print("{:*^53}".format(" Rule {} ".format(i+1)))
+            print("{} <- {} {}".format(
                 rule["destination"],
-                rule["operands"],
-                rule["operation"]
+                rule["operation"],
+                rule["operands"]
             ))
             if rule["operation"] == "union":
-                dest = rule["destination"]
-                for cal in rule["operands"]:
-                    calendars[dest].join(calendars[cal])
-                calendars[dest].write_events()
+                dest = calendars[rule["destination"]]
+                for name in rule["operands"]:
+                    dest.join(calendars[name])
+                dest.write_events()

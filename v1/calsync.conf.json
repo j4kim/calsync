@@ -15,6 +15,10 @@
 		"D":{
 			"type":"google",
 			"id":"2sji0p87j5egumot56bfbog8b8@group.calendar.google.com"
+		},
+		"E":{
+			"type":"ics",
+			"path":"e.ics"
 		}
 	},
 	"rules":[
@@ -22,6 +26,11 @@
 			"operation":"union",
 			"operands": ["A","B","C"],
 			"destination":"D"
+		},
+		{
+			"operation":"union",
+			"operands": ["B","C"],
+			"destination":"E"
 		}
 	]
 }
