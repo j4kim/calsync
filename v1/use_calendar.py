@@ -1,4 +1,4 @@
-from calsync_calendar import IcsCalendar, GoogleCalendar
+from calsync_calendar import IcsCalendar, GoogleCalendar, CalsyncCalendar
 import json
 
 if __name__ == "__main__":
@@ -9,46 +9,23 @@ if __name__ == "__main__":
         print("Definitions :")
         for key, params in config["definitions"].items():
             if params["type"] == "ics":
-                calendars[key] = (IcsCalendar(params["path"]))
+                calendars[key] = (IcsCalendar(key, params["path"]))
             elif params["type"] == "google":
-                calendars[key] = (GoogleCalendar(params["id"]))
+                calendars[key] = (GoogleCalendar(key, params["id"]))
         for k, cal in calendars.items():
-            print("{} ({})".format(k, cal.__class__.__name__))
             #cal.read_events()
-            cal.print_events()
+            print(cal)
 
         print("Rules :")
         for i, rule in enumerate(config["rules"]):
-            print("rule {} : {} = {} {} {}".format(
+            print("rule {} : {} = {} {}".format(
                 i,
                 rule["destination"],
-                rule["operands"][0],
-                rule["operation"],
-                rule["operands"][1]
+                rule["operands"],
+                rule["operation"]
             ))
-
-        #e1 = calendars["B"].events[0]
-        #e2 = calendars["A"].events[0]
-        #calendars["C"].write_event(e1)
-        #calendars["C"].write_event(e2)
-
-        # e = {
-        #     'start': {
-        #         'date': '2016-12-27'
-        #     },
-        #     'end': {
-        #         'date': '2016-12-28'
-        #     },
-        #     'summary': 'COUCOU LOL'
-        # }
-        #calendars['B'].write_event(e)
-
-        for uid, e in calendars['B'].events.items():
-            calendars['A'].write_event(e)
-
-        # calendars['A'].write_event(e)
-        #
-        # for e in calendars['B'].events:
-        #     print(e)
-
-        # print(calendars['A'])
+            if rule["operation"] == "union":
+                dest = rule["destination"]
+                for cal in rule["operands"]:
+                    calendars[dest].join(calendars[cal])
+                calendars[dest].write_events()
