@@ -1,7 +1,3 @@
-from datetime import date, datetime, timezone, timedelta
-
-import icalendar
-from icalendar import vDatetime, vDate, vDDDTypes, Event
 
 class CalsyncCalendar:
     """Classe représentant un calendrier abstrait"""

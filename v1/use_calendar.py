@@ -3,8 +3,7 @@ from ics_calendar import IcsCalendar
 from google_calendar import GoogleCalendar
 import json
 
-if __name__ == "__main__":
-
+def main():
     with open("./calsync.conf.json", encoding="utf-8") as f:
         calendars = {}
         config = json.loads(f.read())
@@ -30,3 +29,7 @@ if __name__ == "__main__":
                 for name in rule["operands"]:
                     dest.join(calendars[name])
                 dest.write_events()
+
+
+if __name__ == "__main__":
+    main()

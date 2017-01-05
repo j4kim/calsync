@@ -1,6 +1,6 @@
-from datetime import date, datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta
 import icalendar
-from icalendar import vDatetime, vDate, vDDDTypes, Event
+from icalendar import vDDDTypes, Event
 from calsync_calendar import CalsyncCalendar
 
 class IcsCalendar(CalsyncCalendar):
