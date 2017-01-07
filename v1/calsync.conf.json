@@ -1,36 +1,39 @@
 {
-	"definitions":{
-		"A":{
-			"type":"ics",
-			"path":"ivan_igrac_cal.ics"
-		},
-		"B":{
-			"type":"google",
-			"id":"primary"
-		},
-		"C":{
-			"type":"google",
-			"id":"3mnnljsfhcu14k8n398h9o4oh8@group.calendar.google.com"
-		},
-		"D":{
-			"type":"google",
-			"id":"2sji0p87j5egumot56bfbog8b8@group.calendar.google.com"
-		},
-		"E":{
-			"type":"ics",
-			"path":"e.ics"
-		}
-	},
-	"rules":[
-		{
-			"operation":"union",
-			"operands": ["A","B","C"],
-			"destination":"D"
-		},
-		{
-			"operation":"union",
-			"operands": ["B","C"],
-			"destination":"E"
-		}
-	]
+  "definitions":{
+    "A":{
+      "type":"ics",
+      "path":"ivan_igrac_cal.ics"
+    },
+    "B":{
+      "type":"google",
+      "id":"primary"
+    },
+    "C":{
+      "type":"google",
+      "id":"3mnnljsfhcu14k8n398h9o4oh8@group.calendar.google.com"
+    },
+    "D":{
+      "type":"google",
+      "id":"2sji0p87j5egumot56bfbog8b8@group.calendar.google.com"
+    },
+    "E":{
+      "type":"exchange",
+      "server":"outlook.he-arc.ch",
+      "username":"EISI\\joaquim.perez",
+      "address":"joaquim.perez@he-arc.ch"
+    },
+    "F":{
+      "type":"ics",
+      "path":"f.ics"
+    }
+  },
+  "rules":[
+    {
+      "operation": "union",
+      "operands": [
+        "E"
+      ],
+      "destination": "B"
+    }
+  ]
 }

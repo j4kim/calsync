@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from exchangelib import DELEGATE, IMPERSONATION, Account, Credentials, \
     EWSDateTime, EWSTimeZone, Configuration, NTLM, CalendarItem
@@ -43,9 +43,15 @@ class ExchangeCalendar(CalsyncCalendar):
             c_event["start"] = item.start.date()
             c_event["end"] = item.end.date()
         else:
-            c_event["start"] = item.start
-            c_event["end"] = item.end
+            # sauf que EWSDateTime n'est pas reconnu par google qui crée une erreur, il faut créer des datetime
+            # j'ai pas trouvé le moyen python de caster une classe dérivée en classe parente, apparemment c'est
+            # qqch qu'on ne devrait pas faire
+            s = item.start
+            e = item.end
+            c_event["start"] = datetime(s.year, s.month, s.day, s.hour, s.minute, s.second, s.microsecond).replace(tzinfo=timezone.utc)
+            c_event["end"] = datetime(e.year, e.month, e.day, e.hour, e.minute, e.second, e.microsecond).replace(tzinfo=timezone.utc)
+
         # Exchange ne sauvegarde pas la date de dernière modification, juste une changekey, qui est
         # une string de 40 calaractères incrémentées à chaque modification
-        c_event["updated"] = datetime.min # pour l'instant, on met la date de modification au 1er javier de l'an 1
+        c_event["updated"] = datetime.min.replace(tzinfo=timezone.utc) # pour l'instant, on met la date de modification au 1er javier de l'an 1
         return c_event

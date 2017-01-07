@@ -1,4 +1,4 @@
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 import icalendar
 from icalendar import vDDDTypes, Event
 from calsync_calendar import CalsyncCalendar
@@ -29,8 +29,6 @@ class IcsCalendar(CalsyncCalendar):
                         event[param] = event[param].replace(tzinfo=timezone.utc) # todo: récupérer le fuseau depuis le calendrier
 
                 event["updated"] = component.decoded("LAST-MODIFIED")
-                event["updated"] += timedelta(microseconds=1) # je rajoute une microsecondes pour que google m'emmerde pas avec des formats de date incorrects
-                # googleapiclient.errors.HttpError: <HttpError 400 when requesting https://www.googleapis.com/calendar/v3/calendars/3mnnljsfhcu14k8n398h9o4oh8%40group.calendar.google.com/events/import?alt=json returned "Invalid value for: Invalid format: "2017-01-03T16:55:02Z" is malformed at "Z"">
 
                 uid = component.get("uid")+"" # avoid vText()
                 event["iCalUID"] = uid

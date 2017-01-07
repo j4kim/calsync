@@ -14,8 +14,7 @@ class CalsyncCalendar:
         if not self.events:
             s += '\nNo events found.'
         for uid, event in self.events.items():
-            start = event['start']
-            s += "\n{:<25} : {}".format(str(start), event["summary"])
+            s += "\n{:<25} : {}".format(str(event['start']), event["summary"])
             # s += " // {} / {} / {}".format(event["updated"],  event["iCalUID"], event.get("id","pas d'id"))
         return s
 

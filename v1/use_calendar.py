@@ -11,11 +11,20 @@ def main():
         print("{:*<53}".format("Definitions "))
         for key, params in config["definitions"].items():
             if params["type"] == "ics":
-                calendars[key] = (IcsCalendar(key, params["path"]))
+                calendars[key] = IcsCalendar(key, params["path"])
             elif params["type"] == "google":
-                calendars[key] = (GoogleCalendar(key, params["id"]))
+                calendars[key] = GoogleCalendar(key, params["id"])
+            elif params["type"] == "exchange":
+                pwd=None
+                try:
+                    with open(".exchange_pwd", encoding="utf-8") as pwd_file:
+                        pwd = pwd_file.read()
+                except:
+                    pwd=None
+                calendars[key] = ExchangeCalendar(key, params["server"], params["username"], params["address"], pwd)
+            else:
+                print("unknown type " + params["type"])
         for k, cal in calendars.items():
-            #cal.read_events()
             print(cal)
 
         for i, rule in enumerate(config["rules"]):
@@ -30,11 +39,13 @@ def main():
                 for name in rule["operands"]:
                     dest.join(calendars[name])
                 dest.write_events()
+            elif rule["operation"] == "intersection":
+                pass
+            else:
+                print("unknown operation " + rule["operation"])
 
 
 if __name__ == "__main__":
-    # main()
-    e_cal = ExchangeCalendar("HE-arc", "outlook.he-arc.ch", "EISI\joaquim.perez", "joaquim.perez@he-arc.ch")
-    print(e_cal)
+    main()
 
 
