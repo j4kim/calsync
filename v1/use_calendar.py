@@ -1,6 +1,7 @@
 from calsync_calendar import CalsyncCalendar
 from ics_calendar import IcsCalendar
 from google_calendar import GoogleCalendar
+from exchange_calendar import ExchangeCalendar
 import json
 
 def main():
@@ -32,4 +33,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    e_cal = ExchangeCalendar("HE-arc", "outlook.he-arc.ch", "EISI\joaquim.perez", "joaquim.perez@he-arc.ch")
+    print(e_cal)
+
+

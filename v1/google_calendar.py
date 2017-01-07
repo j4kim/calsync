@@ -6,8 +6,7 @@ from calsync_calendar import CalsyncCalendar
 
 class GoogleCalendar(CalsyncCalendar):
     def __init__(self, name, id="primary"):
-        CalsyncCalendar.__init__(self)
-        self.name = name
+        CalsyncCalendar.__init__(self, name)
         self.id = id
         self.service = get_service()
         #self.calendar = self.service.calendars().get(calendarId=id).execute()

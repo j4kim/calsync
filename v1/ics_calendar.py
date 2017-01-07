@@ -5,8 +5,7 @@ from calsync_calendar import CalsyncCalendar
 
 class IcsCalendar(CalsyncCalendar):
     def __init__(self, name, ics_path):
-        CalsyncCalendar.__init__(self)
-        self.name = name
+        CalsyncCalendar.__init__(self, name)
         self.path = ics_path
         try:
             with open(self.path, encoding="utf-8") as ics_text:

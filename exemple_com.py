@@ -25,6 +25,7 @@ def WriteCalendrier():
     heurefin = "13:13:13"
     # Creation d'un rendez-vous
     recipient = namespace.CreateRecipient("Salle-CA2-ING-019")
+    print(help(namespace.GetSharedDefaultFolder))
     calendrier = namespace.GetSharedDefaultFolder(recipient, olFolderCalendar)
     appt = calendrier.Items.Add(1)
     appt.Start = datedebut + ' ' + heuredebut

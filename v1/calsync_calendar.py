@@ -2,9 +2,10 @@
 class CalsyncCalendar:
     """Classe représentant un calendrier abstrait"""
 
-    def __init__(self):
+    def __init__(self, name):
         # dictionnaire avec clé:uid d'un event et valeur:dictionnaire représentant un event
         self.events = {}
+        self.name = name
 
     def __repr__(self):
         s = "{:_^53}".format(" CALENDAR {} ".format(self.name))
