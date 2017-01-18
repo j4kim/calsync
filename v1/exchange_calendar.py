@@ -10,6 +10,12 @@ class ExchangeCalendar(CalsyncCalendar):
     def __init__(self, name, server, username, address, pwd=None):
         CalsyncCalendar.__init__(self, name)
 
+        try:
+            with open(".exchange_pwd", encoding="utf-8") as pwd_file:
+                pwd = pwd_file.read()
+        except:
+            pwd = None
+
         if not pwd:
             # from getpass import getpass
             # pwd = getpass("Entrez votre mot de passe Exchange : ")
@@ -29,6 +35,7 @@ class ExchangeCalendar(CalsyncCalendar):
     def read_events(self):
         all_items = self.account.calendar.all()
         for item in all_items:
+            # print(item)
             c_event = ExchangeCalendar.to_calsync_event(item)
             self.events[c_event["iCalUID"]] = c_event
 
@@ -53,5 +60,6 @@ class ExchangeCalendar(CalsyncCalendar):
 
         # Exchange ne sauvegarde pas la date de dernière modification, juste une changekey, qui est
         # une string de 40 calaractères incrémentées à chaque modification
-        c_event["updated"] = datetime.min.replace(tzinfo=timezone.utc) # pour l'instant, on met la date de modification au 1er javier de l'an 1
+        c_event["changekey"] = item.changekey
+        # c_event["updated"] = datetime.min.replace(tzinfo=timezone.utc) # pour l'instant, on met la date de modification au 1er javier de l'an 1
         return c_event

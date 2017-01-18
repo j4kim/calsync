@@ -15,13 +15,7 @@ def main():
             elif params["type"] == "google":
                 calendars[key] = GoogleCalendar(key, params["id"])
             elif params["type"] == "exchange":
-                pwd=None
-                try:
-                    with open(".exchange_pwd", encoding="utf-8") as pwd_file:
-                        pwd = pwd_file.read()
-                except:
-                    pwd=None
-                calendars[key] = ExchangeCalendar(key, params["server"], params["username"], params["address"], pwd)
+                calendars[key] = ExchangeCalendar(key, params["server"], params["username"], params["address"])
             else:
                 print("unknown type " + params["type"])
         for k, cal in calendars.items():
@@ -46,6 +40,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    g = GoogleCalendar("Calsync Test", "primary")
+    # o = ExchangeCalendar("Exchange", "outlook.he-arc.ch", "EISI\\joaquim.perez", "joaquim.perez@he-arc.ch")
+    # g.join(o)
+    # g.write_events()
 
 

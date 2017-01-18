@@ -29,22 +29,34 @@ class CalsyncCalendar:
             self.add(event)
 
     # idempotent addition
-    def add(self, event):
+    def add(self, src_event):
         # reinitialize flags
-        event["flags"] = set()
-        uid = event["iCalUID"]
+        src_event["flags"] = set()
+        uid = src_event["iCalUID"]
         # check if event does not already exists
         if uid not in self.events:
             # raise a flag to know that we have to create this event
-            event['flags'].add("is_new")
-            self.events[uid] = event
-
-        # if the event exists, check if the last-update datetime has changed
-        elif self.events[uid]["updated"] < event["updated"]:
-            # if the event has been updated, replace it in the dictionnary
-            # raise a flag for Google calendars update method instead of import
-            event['flags'].add("has_been_updated")
+            src_event['flags'].add("is_new")
+        else:
+            # the event already exists in destination calendar
+            dst_event = self.events[uid]
+            # we don't know if src_event is different has dst_event (if it has been updated)
+            if "updated" in src_event and "updated" in dst_event:
+                # both events have the "udpated" key, so we can easily test which is the newer
+                if dst_event["updated"] >= src_event["updated"]:
+                    # src event has not been updated after dest event, do nothing
+                    return
+            else:
+                # we don't know which one is the latest updated
+                # for the moment, we will override de destination event in all cases
+                pass
             # bricolage pour permettre l'update par la google api qui a besoin de l'attribut id
-            if "id" in self.events[uid]:
-                event["id"] = self.events[uid]["id"]
-            self.events[uid] = event
+            if "id" in dst_event:
+                src_event["id"] = dst_event["id"]
+
+            # if we didnt return, raise the flag to let know dest calendar (self)
+            # that it has to replace his version of the event
+            src_event['flags'].add("has_been_updated")
+
+        # add (or replace by) the source event in the destination calendar
+        self.events[uid] = src_event

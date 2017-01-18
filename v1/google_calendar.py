@@ -20,6 +20,7 @@ class GoogleCalendar(CalsyncCalendar):
         g_events = eventsResult.get('items', [])
 
         for e in g_events:
+            # print(e)
             e["updated"] = dateutil.parser.parse(e["updated"]) # convertit la str en datetime
             for param in ["start", "end"]:
                 # les events Google contiennent soit une date, soit une datetime pour les propriétés start et end
@@ -50,7 +51,7 @@ class GoogleCalendar(CalsyncCalendar):
         if 'flags' in event and event["flags"]:
             # transforme le calsync Event en google Event
             g_event = GoogleCalendar.to_google_event(event)
-            # print("event to write", event)
+            #print("event to write", g_event)
             if "is_new" in event["flags"]:
                 # call Google Calendar API's import method
                 new_e = self.service.events().import_(calendarId=self.id, body=g_event).execute()
@@ -67,11 +68,13 @@ class GoogleCalendar(CalsyncCalendar):
     def to_google_event(event):
         g_event = deepcopy(event)
 
-        g_event["updated"] += timedelta(microseconds=1)  # je rajoute une microsecondes pour que google m'emmerde pas avec des formats de date incorrects
-        # googleapiclient.errors.HttpError: <HttpError 400 when requesting https://www.googleapis.com/calendar/v3/calendars/3mnnljsfhcu14k8n398h9o4oh8%40group.calendar.google.com/events/import?alt=json returned "Invalid value for: Invalid format: "2017-01-03T16:55:02Z" is malformed at "Z"">
+        if "updated" in g_event:
+            g_event["updated"] += timedelta(microseconds=1)  # je rajoute une microsecondes pour que google m'emmerde pas avec des formats de date incorrects
+            # googleapiclient.errors.HttpError: <HttpError 400 when requesting https://www.googleapis.com/calendar/v3/calendars/3mnnljsfhcu14k8n398h9o4oh8%40group.calendar.google.com/events/import?alt=json returned "Invalid value for: Invalid format: "2017-01-03T16:55:02Z" is malformed at "Z"">
 
-        # updated : datetime -> yyyy-mm-ddThh:mm:ss.xxxZ
-        g_event["updated"] = g_event["updated"].replace(tzinfo=None).isoformat() + 'Z'
+            # updated : datetime -> yyyy-mm-ddThh:mm:ss.xxxZ
+            g_event["updated"] = g_event["updated"].replace(tzinfo=None).isoformat() + 'Z'
+
         # start : date|datetime -> {"dateTime": "yyyy-mm-ddThh:mm:ss+01:00"}|{"date": "yyyy-mm-dd"}
         # end : date|datetime -> {"dateTime": "yyyy-mm-ddThh:mm:ss+01:00"}|{"date": "yyyy-mm-dd"}
         for param in ["start", "end"]:
@@ -82,7 +85,14 @@ class GoogleCalendar(CalsyncCalendar):
                 d["dateTime"] = g_event[param].isoformat()
             g_event[param] = d
 
+        if "changekey" in g_event:
+            g_event["extendedProperties"] = {
+                "private": {
+                    "changekey": g_event["changekey"]
+                }
+            }
 
-        # google n'accepte pas les attributs qu'il ne connaît pas, il faut l'enlever
+        # google n'arrive pas à convertir un set python en json, il faut enlever les flags
+        # TypeError: {'is_new'} is not JSON serializable
         if 'flags' in g_event: del g_event['flags']
         return g_event
