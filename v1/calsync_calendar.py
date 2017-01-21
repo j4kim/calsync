@@ -15,7 +15,6 @@ class CalsyncCalendar:
             s += '\nNo events found.'
         for uid, event in self.events.items():
             s += "\n{:<25} : {}".format(str(event['start']), event["summary"])
-            # s += " // {} / {} / {}".format(event["updated"],  event["iCalUID"], event.get("id","pas d'id"))
         return s
 
     def union(self, cal1, cal2):
@@ -46,13 +45,21 @@ class CalsyncCalendar:
                 if dst_event["updated"] >= src_event["updated"]:
                     # src event has not been updated after dest event, do nothing
                     return
+            # elif "changekey" in src_event and "changekey" in dst_event:
+            #     if src_event["changekey"] == src_event["changekey"]:
+            #         # exchange event has not changed, do nothing
+            #         return
             else:
                 # we don't know which one is the latest updated
                 # for the moment, we will override de destination event in all cases
                 pass
+
             # bricolage pour permettre l'update par la google api qui a besoin de l'attribut id
             if "id" in dst_event:
                 src_event["id"] = dst_event["id"]
+            if "exchange_id" in dst_event:
+                src_event["exchange_id"] = dst_event["exchange_id"]
+                src_event["changekey"] = dst_event["changekey"]
 
             # if we didnt return, raise the flag to let know dest calendar (self)
             # that it has to replace his version of the event

@@ -9,20 +9,15 @@
       "server":"outlook.he-arc.ch",
       "username":"EISI\\joaquim.perez",
       "address":"joaquim.perez@he-arc.ch"
-    },
-    "I":{
-      "type":"ics",
-      "path":"ivan_igrac_cal.ics"
     }
   },
   "rules":[
     {
       "operation": "union",
-      "subject": "Marcelo is busy",
       "operands": [
-        "E", "I"
+        "G"
       ],
-      "destination": "G"
+      "destination": "E"
     }
   ]
 }

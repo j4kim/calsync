@@ -9,18 +9,15 @@ class GoogleCalendar(CalsyncCalendar):
         CalsyncCalendar.__init__(self, name)
         self.id = id
         self.service = get_service()
-        #self.calendar = self.service.calendars().get(calendarId=id).execute()
         self.read_events()
 
     def read_events(self):
-        #now = datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
         eventsResult = self.service.events().list(
             calendarId=self.id, singleEvents=True,
             orderBy='startTime').execute()
         g_events = eventsResult.get('items', [])
 
         for e in g_events:
-            # print(e)
             e["updated"] = dateutil.parser.parse(e["updated"]) # convertit la str en datetime
             for param in ["start", "end"]:
                 # les events Google contiennent soit une date, soit une datetime pour les propriétés start et end
@@ -28,18 +25,14 @@ class GoogleCalendar(CalsyncCalendar):
                     e[param] = dateutil.parser.parse(e[param]["dateTime"]) # convertit la string en datetime
                 elif "date" in e[param]:
                     e[param] = dateutil.parser.parse(e[param]["date"]).date() # convertit la string en datetime, puis ne récupère que la date
+            # # Désolé Yoan Blanc si vous voyez ça
+            # if "extendedProperties" in e:
+            #     if "private" in e["extendedProperties"]:
+            #         if "exchange_id" in  e["extendedProperties"]["private"]:
+            #             e["exchange_id"] = e["extendedProperties"]["private"]["exchange_id"]
+            #             e["changekey"] = e["extendedProperties"]["private"]["changekey"]
             del e['organizer'] # avoid HttpError 400 when requesting https://... returned "The owner of the calendar must either be the organizer or an attendee of an event that is imported."
             self.events[e["iCalUID"]] = e
-
-    # def list_calendars(self):
-    #     page_token = None
-    #     while True:
-    #         calendar_list = self.service.calendarList().list(pageToken=page_token).execute()
-    #         for calendar_list_entry in calendar_list['items']:
-    #             print(calendar_list_entry['summary'])
-    #         page_token = calendar_list.get('nextPageToken')
-    #         if not page_token:
-    #             break
 
 
     # insert or update events
@@ -70,7 +63,7 @@ class GoogleCalendar(CalsyncCalendar):
 
         if "updated" in g_event:
             g_event["updated"] += timedelta(microseconds=1)  # je rajoute une microsecondes pour que google m'emmerde pas avec des formats de date incorrects
-            # googleapiclient.errors.HttpError: <HttpError 400 when requesting https://www.googleapis.com/calendar/v3/calendars/3mnnljsfhcu14k8n398h9o4oh8%40group.calendar.google.com/events/import?alt=json returned "Invalid value for: Invalid format: "2017-01-03T16:55:02Z" is malformed at "Z"">
+            # googleapiclient.errors.HttpError: <HttpError 400 when requesting https://... returned "Invalid value for: Invalid format: "2017-01-03T16:55:02Z" is malformed at "Z"">
 
             # updated : datetime -> yyyy-mm-ddThh:mm:ss.xxxZ
             g_event["updated"] = g_event["updated"].replace(tzinfo=None).isoformat() + 'Z'
@@ -85,14 +78,15 @@ class GoogleCalendar(CalsyncCalendar):
                 d["dateTime"] = g_event[param].isoformat()
             g_event[param] = d
 
-        if "changekey" in g_event:
-            g_event["extendedProperties"] = {
-                "private": {
-                    "changekey": g_event["changekey"]
-                }
-            }
+        # if "exchange_id" in g_event:
+        #     g_event["extendedProperties"] = {
+        #         "private": {
+        #             "exchange_id": g_event["exchange_id"],
+        #             "changekey": g_event["changekey"]
+        #         }
+        #     }
 
-        # google n'arrive pas à convertir un set python en json, il faut enlever les flags
+        # l'api google n'arrive pas à convertir un set python en json, il faut enlever les flags
         # TypeError: {'is_new'} is not JSON serializable
         if 'flags' in g_event: del g_event['flags']
         return g_event

@@ -5,7 +5,7 @@ from exchange_calendar import ExchangeCalendar
 import json
 
 def main():
-    with open("./calsync.conf.json", encoding="utf-8") as f:
+    with open("g_to_ex.conf.json", encoding="utf-8") as f:
         calendars = {}
         config = json.loads(f.read())
         print("{:*<53}".format("Definitions "))
@@ -40,10 +40,6 @@ def main():
 
 
 if __name__ == "__main__":
-    # main()
-    g = GoogleCalendar("Calsync Test", "primary")
-    # o = ExchangeCalendar("Exchange", "outlook.he-arc.ch", "EISI\\joaquim.perez", "joaquim.perez@he-arc.ch")
-    # g.join(o)
-    # g.write_events()
+    main()
 
 

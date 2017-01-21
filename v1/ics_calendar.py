@@ -28,7 +28,8 @@ class IcsCalendar(CalsyncCalendar):
                     if type(event[param]) is datetime:
                         event[param] = event[param].replace(tzinfo=timezone.utc) # todo: récupérer le fuseau depuis le calendrier
 
-                event["updated"] = component.decoded("LAST-MODIFIED")
+                if "LAST-MODIFIED" in component:
+                    event["updated"] = component.decoded("LAST-MODIFIED")
 
                 uid = component.get("uid")+"" # avoid vText()
                 event["iCalUID"] = uid
@@ -55,6 +56,7 @@ class IcsCalendar(CalsyncCalendar):
             e.add('dt'+param, dd)
 
         e.add('uid', event["iCalUID"]);
-        e.add('LAST-MODIFIED', event["updated"])
+        if "updated" in event:
+            e.add('LAST-MODIFIED', event["updated"])
 
         self.ical.add_component(e)
