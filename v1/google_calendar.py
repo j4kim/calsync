@@ -1,9 +1,7 @@
-from datetime import date, datetime, timedelta
-from google_api_tools import get_service
-import dateutil.parser
-from copy import deepcopy
 from calsync_calendar import CalsyncCalendar
-from calsync_event import GoogleEvent
+from google_api_tools import get_service
+from google_event import GoogleEvent, to_google
+
 
 class GoogleCalendar(CalsyncCalendar):
     def __init__(self, name, id="primary"):
@@ -26,12 +24,12 @@ class GoogleCalendar(CalsyncCalendar):
     def create_event(self, event):
         self.service.events().import_(
             calendarId=self.id,
-            body=event.google_representation()
+            body = to_google(event)
         ).execute()
 
     def update_event(self, event):
         self.service.events().update(
             calendarId = self.id,
             eventId = event.google_id,
-            body = event.google_representation()
+            body = to_google(event)
         ).execute()

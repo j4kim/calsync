@@ -1,0 +1,23 @@
+{
+  "definitions":{
+    "E":{
+      "type":"exchange",
+      "server":"outlook.he-arc.ch",
+      "username":"EISI\\joaquim.perez",
+      "address":"joaquim.perez@he-arc.ch"
+    },
+    "I":{
+      "type":"ics",
+      "path":"ivan_igrac_cal.ics"
+    }
+  },
+  "rules":[
+    {
+      "operation": "union",
+      "operands": [
+        "I"
+      ],
+      "destination": "E"
+    }
+  ]
+}

@@ -15,7 +15,7 @@ class CalsyncCalendar:
             s += '\nNo events found.'
         for id, event in self.events.items():
             s += "\n{:<25} : {}".format(str(event.start), event.subject)
-        return s
+        return s + '\n'
 
     def union(self, cal1, cal2):
         self.join(cal1)

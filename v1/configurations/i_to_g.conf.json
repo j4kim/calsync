@@ -1,0 +1,21 @@
+{
+  "definitions":{
+    "G":{
+      "type":"google",
+      "id":"primary"
+    },
+    "I":{
+      "type":"ics",
+      "path":"ivan_igrac_cal.ics"
+    }
+  },
+  "rules":[
+    {
+      "operation": "union",
+      "operands": [
+        "I"
+      ],
+      "destination": "G"
+    }
+  ]
+}

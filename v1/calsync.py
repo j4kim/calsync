@@ -1,11 +1,10 @@
-from calsync_calendar import CalsyncCalendar
 from ics_calendar import IcsCalendar
 from google_calendar import GoogleCalendar
 from exchange_calendar import ExchangeCalendar
 import json
 
-def main():
-    with open("g_to_g.conf.json", encoding="utf-8") as f:
+def run(config_file):
+    with open(config_file, encoding="utf-8") as f:
         calendars = {}
         config = json.loads(f.read())
         print("{:*<53}".format("Definitions "))
@@ -22,7 +21,7 @@ def main():
             print(cal)
 
         for i, rule in enumerate(config["rules"]):
-            print("{:*^53}".format(" Rule {} ".format(i+1)))
+            print("\n{:*^53}".format(" Rule {} ".format(i+1)))
             print("{} <- {} {}".format(
                 rule["destination"],
                 rule["operation"],
@@ -40,25 +39,27 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import argparse, time
+    from datetime import datetime
 
-    # from calsync_event import CalsyncEvent
-    # e1 = CalsyncEvent()
-    # e1.id = "1234"
-    # e1.subject = "coucou"
-    #
-    # e2 = CalsyncEvent()
-    # e2.id = "5678"
-    # e2.subject = "hello"
-    #
-    # cal = CalsyncCalendar("Abstract calendar")
-    # cal.add(e1)
-    # cal.add(e2)
-    #
-    # other_e2 = CalsyncEvent()
-    # other_e2.id = "5678"
-    # other_e2.subject = "salut"
-    #
-    # cal.add(other_e2)
-    #
-    # print(cal)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("path",
+                        help="Configuration file name")
+    parser.add_argument("-t", "--refreshtime",
+                        help="Syncing period in seconds (default: 300s == 5 minutes)",
+                        type=int,
+                        default=300)
+    parser.add_argument("-o", "--justonce",
+                        help="Add this if you want calsync to be executed just once",
+                        action="store_true",
+                        default=False)
+    args = parser.parse_args()
+
+    if args.justonce:
+        run(args.path)
+    else:
+        while True:
+            print("Calsync syncing {}".format(datetime.now().strftime("%A the %d. %B %Y at %H:%M:%S")))
+            run(args.path)
+            print("Wait {} seconds\n\n".format(args.refreshtime))
+            time.sleep(args.refreshtime)

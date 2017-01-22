@@ -1,0 +1,21 @@
+{
+  "definitions":{
+    "G":{
+      "type":"google",
+      "id":"primary"
+    },
+    "I":{
+      "type":"ics",
+      "path":"out.ics"
+    }
+  },
+  "rules":[
+    {
+      "operation": "union",
+      "operands": [
+        "G"
+      ],
+      "destination": "I"
+    }
+  ]
+}
