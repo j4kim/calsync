@@ -5,7 +5,7 @@ from exchange_calendar import ExchangeCalendar
 import json
 
 def main():
-    with open("g_to_ex.conf.json", encoding="utf-8") as f:
+    with open("g_to_g.conf.json", encoding="utf-8") as f:
         calendars = {}
         config = json.loads(f.read())
         print("{:*<53}".format("Definitions "))
@@ -42,4 +42,23 @@ def main():
 if __name__ == "__main__":
     main()
 
-
+    # from calsync_event import CalsyncEvent
+    # e1 = CalsyncEvent()
+    # e1.id = "1234"
+    # e1.subject = "coucou"
+    #
+    # e2 = CalsyncEvent()
+    # e2.id = "5678"
+    # e2.subject = "hello"
+    #
+    # cal = CalsyncCalendar("Abstract calendar")
+    # cal.add(e1)
+    # cal.add(e2)
+    #
+    # other_e2 = CalsyncEvent()
+    # other_e2.id = "5678"
+    # other_e2.subject = "salut"
+    #
+    # cal.add(other_e2)
+    #
+    # print(cal)
