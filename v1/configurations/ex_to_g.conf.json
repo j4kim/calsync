@@ -1,0 +1,23 @@
+{
+  "definitions":{
+    "G":{
+      "type":"google",
+      "id":"primary"
+    },
+    "E":{
+      "type":"exchange",
+      "server":"outlook.he-arc.ch",
+      "username":"EISI\\joaquim.perez",
+      "address":"joaquim.perez@he-arc.ch"
+    }
+  },
+  "rules":[
+    {
+      "operation": "union",
+      "operands": [
+        "E"
+      ],
+      "destination": "G"
+    }
+  ]
+}
