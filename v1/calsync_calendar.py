@@ -82,3 +82,7 @@ class CalsyncCalendar:
             print('Event "{}" updated'.format(event.subject))
         else:
             print('Nothing to do with event "{}"'.format(event.subject))
+
+    def override_subject(self, subject):
+        for id, event in self.events.items():
+            event.subject = subject

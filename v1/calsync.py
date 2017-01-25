@@ -31,6 +31,8 @@ def run(config_file):
                 dest = calendars[rule["destination"]]
                 for name in rule["operands"]:
                     dest.join(calendars[name])
+                if "subject" in rule:
+                    dest.override_subject(rule["subject"])
                 dest.write_events()
             elif rule["operation"] == "intersection":
                 pass
@@ -39,8 +41,11 @@ def run(config_file):
 
 
 if __name__ == "__main__":
-    import argparse, time
+    import argparse, time, sys
     from datetime import datetime
+
+    # run("configurations/g_to_g_anonymous.conf.json")
+    # sys.exit()
 
     parser = argparse.ArgumentParser()
     parser.add_argument("path",
