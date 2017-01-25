@@ -17,3 +17,7 @@ exchangelib
 Download and extract this : https://pypi.python.org/pypi/exchangelib  
 move to the directory `exchangelib-1.7.5` and run :
 > `python setup.py install`
+
+simple-crypt
+
+> `pip install simple-crypt`
