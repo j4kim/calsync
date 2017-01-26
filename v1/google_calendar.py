@@ -36,7 +36,7 @@ class GoogleCalendar(CalsyncCalendar):
 
     def delete_event(self, id):
         if id not in self.events: return
-        google_id = self.events[id].api_id
+        google_id = self.events[id].google_id
         try:
             response = self.service.events().delete(
                 calendarId = self.id,

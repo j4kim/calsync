@@ -97,7 +97,7 @@ class CalsyncCalendar:
             event.subject = new_subject
 
     def check_deleted(self):
-        ids = self.events.keys()
+        ids = set(self.events.keys())
         try:
             # open the file in read mode
             cal_file = open(".cals/"+self.name, 'r+')
@@ -105,7 +105,7 @@ class CalsyncCalendar:
             for id in old_ids:
                 if id not in ids:
                     self.deleted.add(id)
-                    print("Event with id {} as been deleted".format(id))
+                    # print("Event with id {} as been deleted".format(id))
             cal_file.close()
         except FileNotFoundError:
             # open() will fail if the file does not exists

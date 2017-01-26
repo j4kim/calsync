@@ -32,7 +32,7 @@ class ExchangeCalendar(CalsyncCalendar):
             print("connexion au compte {} impossible".format(username), file=sys.stderr)
             os.remove(".exchange_pwd")
             sys.exit()
-        self.read_events()
+        super().read_events()
 
     def read_events(self):
         all_items = self.account.calendar.all()

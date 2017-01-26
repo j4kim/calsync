@@ -11,7 +11,7 @@ class IcsCalendar(CalsyncCalendar):
         try:
             with open(self.path, encoding="utf-8") as ics_text:
                 self.ical = icalendar.Calendar.from_ical(ics_text.read())
-                self.read_events()
+                super().read_events()
         except FileNotFoundError:
             # if the ics file does not exists, it will be created in write_events
             pass
@@ -27,5 +27,5 @@ class IcsCalendar(CalsyncCalendar):
         for uid, event in self.events.items():
             self.ical.add_component(to_ics(event))
         with open(self.path, 'w') as f:
-            f.write(self.ical.to_ical())
+            f.write(self.ical.to_ical().decode("utf-8"))
             print("events written")
