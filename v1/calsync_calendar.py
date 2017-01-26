@@ -76,8 +76,8 @@ class CalsyncCalendar:
 
     # insert or update events
     def write_events(self):
-        for api_id in self.deleted:
-            self.delete_event(api_id)
+        for id in self.deleted:
+            self.delete_event(id)
         for id, event in self.events.items():
             self.write_event(event)
 
@@ -89,23 +89,23 @@ class CalsyncCalendar:
             self.update_event(event)
             print('Event "{}" updated'.format(event.subject))
         else:
-            print('Nothing to do with event "{}"'.format(event.subject))
+            pass
+            # print('Nothing to do with event "{}"'.format(event.subject))
 
     def override_subject(self, new_subject):
         for id, event in self.events.items():
             event.subject = new_subject
 
     def check_deleted(self):
-        api_ids = {e.api_id for i,e in self.events.items()}
-
+        ids = self.events.keys()
         try:
             # open the file in read mode
             cal_file = open(".cals/"+self.name, 'r+')
             old_ids = cal_file.read().split()
             for id in old_ids:
-                if id not in api_ids:
+                if id not in ids:
                     self.deleted.add(id)
-                    print("Event {} as been deleted".format(id))
+                    print("Event with id {} as been deleted".format(id))
             cal_file.close()
         except FileNotFoundError:
             # open() will fail if the file does not exists
@@ -114,5 +114,5 @@ class CalsyncCalendar:
 
         # re-open the file in write mode
         cal_file_w = open(".cals/" + self.name, 'w')
-        [cal_file_w.write(e.google_id + '\n') for id, e in self.events.items()]
+        [cal_file_w.write(id + '\n') for id in self.events.keys()]
         cal_file_w.close()

@@ -14,11 +14,11 @@ class ExchangeCalendar(CalsyncCalendar):
         CalsyncCalendar.__init__(self, name)
 
         try:
-            with open(".exchange_pwd", encoding="utf-8") as pwd_file:
-                pwd = decrypt('calsync', pwd_file.read())
-        except:
+            with open(".exchange_pwd", 'rb') as pwd_file:
+                pwd = decrypt('calsync', pwd_file.read()).decode("utf-8")
+        except FileNotFoundError:
             pwd = getpass("Entrez votre mot de passe Exchange : ")
-            with open(".exchange_pwd", 'w') as pwd_file:
+            with open(".exchange_pwd", 'wb') as pwd_file:
                 pwd_file.write(encrypt("calsync", pwd))
 
         credentials = Credentials(username=username, password=pwd, is_service_account=False)
@@ -28,7 +28,7 @@ class ExchangeCalendar(CalsyncCalendar):
                 config=Configuration(server=server,credentials=credentials,auth_type=NTLM),
                 access_type=DELEGATE,
                 locale="ch_fr")
-        except:
+        except FileNotFoundError:
             print("connexion au compte {} impossible".format(username), file=sys.stderr)
             os.remove(".exchange_pwd")
             sys.exit()
@@ -46,8 +46,9 @@ class ExchangeCalendar(CalsyncCalendar):
     def update_event(self, event):
         to_exchange(event, self).save()
 
-    def delete_event(self, ex_id):
-        item = CalendarItem()
-        item.id = ex_id
-        item.delete()
+    def delete_event(self, id):
+        if id not in self.events:
+            return
+        to_exchange(self.events[id], self).delete()
+        print("Event {} deleted".format(self.events[id].subject))
 

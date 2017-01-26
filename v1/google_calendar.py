@@ -34,13 +34,16 @@ class GoogleCalendar(CalsyncCalendar):
             body = to_google(event)
         ).execute()
 
-    def delete_event(self, google_id):
+    def delete_event(self, id):
+        if id not in self.events: return
+        google_id = self.events[id].api_id
         try:
             response = self.service.events().delete(
                 calendarId = self.id,
                 eventId = google_id
             ).execute()
             if not response:
-                print("event with id {} deleted".format(google_id))
+                print("Event {} deleted".format(self.events[id].subject))
         except:
-            print("event width id {} has already been deleted")
+            # print("Event width id {} has already been deleted")
+            pass

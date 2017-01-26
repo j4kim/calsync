@@ -7,7 +7,6 @@ def run(config_file):
     with open(config_file, encoding="utf-8") as f:
         calendars = {}
         config = json.loads(f.read())
-        print("{:*<53}".format("Definitions "))
         for key, params in config["definitions"].items():
             if params["type"] == "ics":
                 calendars[key] = IcsCalendar(key, params["path"])
@@ -17,6 +16,7 @@ def run(config_file):
                 calendars[key] = ExchangeCalendar(key, params["server"], params["username"], params["address"])
             else:
                 print("unknown type " + params["type"])
+        print("{:*<53}".format("Definitions "))
         for k, cal in calendars.items():
             print(cal)
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     import argparse, time, sys
     from datetime import datetime
 
-    run("configurations/g_to_g.conf.json")
+    run("configurations/g_to_ex.conf.json")
     # g = GoogleCalendar("g")
     # print(g)
     sys.exit()
