@@ -44,6 +44,9 @@ if __name__ == "__main__":
     import argparse, time, sys
     from datetime import datetime
 
+    # run("configurations/g_to_ex.conf.json")
+    # sys.exit()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("path",
                         help="Configuration file name")
