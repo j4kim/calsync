@@ -1,4 +1,4 @@
-import json
+import os
 
 class CalsyncCalendar:
     """Classe représentant un calendrier abstrait"""
@@ -22,11 +22,6 @@ class CalsyncCalendar:
         for id, event in self.events.items():
             s += "\n{:<25} : {}".format(str(event.start), event.subject)
         return s + '\n'
-
-    def union(self, cal1, cal2):
-        self.join(cal1)
-        self.join(cal2)
-        self.write_events()
 
     # add all events of other_cal to self (only if events are new or updated)
     def join(self, other_cal):
@@ -111,6 +106,9 @@ class CalsyncCalendar:
             # open() will fail if the file does not exists
             # it's ok, nothing to do
             pass
+
+        try: os.mkdir(".cals")
+        except FileExistsError: pass
 
         # re-open the file in write mode
         cal_file_w = open(".cals/" + self.name, 'w')

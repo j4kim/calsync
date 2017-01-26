@@ -4,9 +4,15 @@ from exchange_calendar import ExchangeCalendar
 import json
 
 def run(config_file):
+    """Run the synchronisation process depending on the conguration file"""
+
+    # open the configuration json file and close it at the end of the bloc
     with open(config_file, encoding="utf-8") as f:
+        # dictionnary that will contain calendars defined in configuration files
         calendars = {}
+        # loads the config as a python dictionnary
         config = json.loads(f.read())
+        # create calendars from the definitions in config
         for key, params in config["definitions"].items():
             if params["type"] == "ics":
                 calendars[key] = IcsCalendar(key, params["path"])
@@ -17,9 +23,11 @@ def run(config_file):
             else:
                 print("unknown type " + params["type"])
         print("{:*<53}".format("Definitions "))
+        # print all events of each calendars
         for k, cal in calendars.items():
             print(cal)
 
+        # we got the calendars and events, now we apply the rules defined in config
         for i, rule in enumerate(config["rules"]):
             print("\n{:*^53}".format(" Rule {} ".format(i+1)))
             print("{} <- {} {}".format(
@@ -29,23 +37,22 @@ def run(config_file):
             ))
             if rule["operation"] == "union":
                 dest = calendars[rule["destination"]]
+                # append the events in operands to the dest calendar
                 for name in rule["operands"]:
                     dest.join(calendars[name])
+                # if a subject is defined, override all subjects before to write events
                 if "subject" in rule:
                     dest.override_subject(rule["subject"])
+                # write all the events in destination calendar, like in google,
+                # exchange or just an ics file depending on the type of the calendar
                 dest.write_events()
-            elif rule["operation"] == "intersection":
-                pass
             else:
                 print("unknown operation " + rule["operation"])
 
 
 if __name__ == "__main__":
-    import argparse, time, sys
+    import argparse, time
     from datetime import datetime
-
-    # run("configurations/g_to_ex.conf.json")
-    # sys.exit()
 
     parser = argparse.ArgumentParser()
     parser.add_argument("path",
@@ -63,6 +70,7 @@ if __name__ == "__main__":
     if args.justonce:
         run(args.path)
     else:
+        # run synchronisation, then wait 5 minutes and rerun it, etc... until the user quit the program
         while True:
             print("Calsync syncing {}".format(datetime.now().strftime("%A the %d. %B %Y at %H:%M:%S")))
             run(args.path)

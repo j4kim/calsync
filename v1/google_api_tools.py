@@ -32,8 +32,8 @@ def get_credentials():
     if not credentials or credentials.invalid:
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
         flow.user_agent = APPLICATION_NAME
-        # Needed only for compatibility with Python 2.6
-        credentials = tools.run(flow, store)
+        flags = tools.argparser.parse_args(args=[])
+        credentials = tools.run_flow(flow, store, flags)
         print('Storing credentials to ' + credential_path)
     return credentials
 
