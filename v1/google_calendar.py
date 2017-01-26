@@ -8,7 +8,7 @@ class GoogleCalendar(CalsyncCalendar):
         CalsyncCalendar.__init__(self, name)
         self.id = id
         self.service = get_service()
-        self.read_events()
+        super().read_events()
 
     def read_events(self):
         eventsResult = self.service.events().list(
@@ -33,3 +33,14 @@ class GoogleCalendar(CalsyncCalendar):
             eventId = event.google_id,
             body = to_google(event)
         ).execute()
+
+    def delete_event(self, google_id):
+        try:
+            response = self.service.events().delete(
+                calendarId = self.id,
+                eventId = google_id
+            ).execute()
+            if not response:
+                print("event with id {} deleted".format(google_id))
+        except:
+            print("event width id {} has already been deleted")

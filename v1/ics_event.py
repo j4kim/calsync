@@ -25,7 +25,7 @@ class IcsEvent(CalsyncEvent):
         if "LAST-MODIFIED" in component:
             self.updated = component.decoded("LAST-MODIFIED")
 
-        self.id = component.get("uid")+"" # avoid vText()
+        self.api_id = self.id = component.get("uid")+"" # avoid vText()
 
 def to_ics(c_event):
     # convert calscync event to ical event

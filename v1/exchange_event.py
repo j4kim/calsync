@@ -15,7 +15,7 @@ class ExchangeEvent(CalsyncEvent):
         else:
             self.id = x_item.item_id
 
-        self.exchange_id = x_item.item_id
+        self.api_id = self.exchange_id = x_item.item_id
         self.changekey = x_item.changekey
         self.subject = x_item.subject
 

@@ -44,8 +44,11 @@ if __name__ == "__main__":
     import argparse, time, sys
     from datetime import datetime
 
-    # run("configurations/g_to_g_anonymous.conf.json")
-    # sys.exit()
+    run("configurations/g_to_g.conf.json")
+    # g = GoogleCalendar("g")
+    # print(g)
+    sys.exit()
+
 
     parser = argparse.ArgumentParser()
     parser.add_argument("path",

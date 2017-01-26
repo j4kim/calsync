@@ -2,7 +2,7 @@ import os
 import sys
 
 from exchangelib import DELEGATE, Account, Credentials, \
-    Configuration, NTLM
+    Configuration, NTLM, CalendarItem
 
 from calsync_calendar import CalsyncCalendar
 from exchange_event import ExchangeEvent, to_exchange
@@ -18,7 +18,7 @@ class ExchangeCalendar(CalsyncCalendar):
                 pwd = decrypt('calsync', pwd_file.read())
         except:
             pwd = getpass("Entrez votre mot de passe Exchange : ")
-            with open(".exchange_pwd", 'wb') as pwd_file:
+            with open(".exchange_pwd", 'w') as pwd_file:
                 pwd_file.write(encrypt("calsync", pwd))
 
         credentials = Credentials(username=username, password=pwd, is_service_account=False)
@@ -45,3 +45,9 @@ class ExchangeCalendar(CalsyncCalendar):
 
     def update_event(self, event):
         to_exchange(event, self).save()
+
+    def delete_event(self, ex_id):
+        item = CalendarItem()
+        item.id = ex_id
+        item.delete()
+

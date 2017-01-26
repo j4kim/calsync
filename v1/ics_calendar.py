@@ -26,6 +26,6 @@ class IcsCalendar(CalsyncCalendar):
         self.ical = icalendar.Calendar()
         for uid, event in self.events.items():
             self.ical.add_component(to_ics(event))
-        with open(self.path, 'wb') as f:
+        with open(self.path, 'w') as f:
             f.write(self.ical.to_ical())
             print("events written")
