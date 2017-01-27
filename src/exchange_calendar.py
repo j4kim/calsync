@@ -2,7 +2,7 @@ import os
 import sys
 
 from exchangelib import DELEGATE, Account, Credentials, \
-    Configuration, NTLM, CalendarItem
+    Configuration, NTLM
 
 from calsync_calendar import CalsyncCalendar
 from exchange_event import ExchangeEvent, to_exchange
@@ -28,7 +28,7 @@ class ExchangeCalendar(CalsyncCalendar):
                 config=Configuration(server=server,credentials=credentials,auth_type=NTLM),
                 access_type=DELEGATE,
                 locale="ch_fr")
-        except FileNotFoundError:
+        except:
             print("connexion au compte {} impossible".format(username), file=sys.stderr)
             os.remove(".exchange_pwd")
             sys.exit()
@@ -49,6 +49,8 @@ class ExchangeCalendar(CalsyncCalendar):
     def delete_event(self, id):
         if id not in self.events:
             return
-        to_exchange(self.events[id], self).delete()
-        print("Event {} deleted".format(self.events[id].subject))
+        try:
+            to_exchange(self.events[id], self).delete()
+            print("Event {} deleted".format(self.events[id].subject))
+        except:pass
 

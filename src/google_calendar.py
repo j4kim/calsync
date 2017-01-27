@@ -1,7 +1,8 @@
+import sys
+
 from calsync_calendar import CalsyncCalendar
 from google_api_tools import get_service
 from google_event import GoogleEvent, to_google
-
 
 class GoogleCalendar(CalsyncCalendar):
     def __init__(self, name, id="primary"):
@@ -11,9 +12,13 @@ class GoogleCalendar(CalsyncCalendar):
         super().read_events()
 
     def read_events(self):
-        eventsResult = self.service.events().list(
-            calendarId=self.id, singleEvents=True,
-            orderBy='startTime').execute()
+        try:
+            eventsResult = self.service.events().list(
+                calendarId=self.id, singleEvents=True,
+                orderBy='startTime').execute()
+        except:
+            print("Error : unable to connect to Google calendar with id "+self.id)
+            sys.exit()
         g_events = eventsResult.get('items', [])
 
         for e in g_events:

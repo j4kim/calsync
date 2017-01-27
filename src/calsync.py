@@ -1,7 +1,8 @@
+from calsync_calendar import CalsyncCalendar
 from ics_calendar import IcsCalendar
 from google_calendar import GoogleCalendar
 from exchange_calendar import ExchangeCalendar
-import json
+import json, sys
 
 def run(config_file):
     """Run the synchronisation process depending on the conguration file"""
@@ -21,7 +22,9 @@ def run(config_file):
             elif params["type"] == "exchange":
                 calendars[key] = ExchangeCalendar(key, params["server"], params["username"], params["address"])
             else:
-                print("unknown type " + params["type"])
+                # create a virtual calendar (not linked to any API)
+                calendars[key] = CalsyncCalendar(key)
+                print("Warning : unknown type " + params["type"] + ", virtual calendar created")
         print("{:*<53}".format("Definitions "))
         # print all events of each calendars
         for k, cal in calendars.items():
@@ -52,7 +55,7 @@ def run(config_file):
 
 if __name__ == "__main__":
     import argparse, time
-    from datetime import datetime
+    from datetime import datetime, sys
 
     parser = argparse.ArgumentParser()
     parser.add_argument("path",

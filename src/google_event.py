@@ -59,7 +59,10 @@ def to_google(c_event):
         if c_event.is_all_day:
             d["date"] = getattr(c_event, param).isoformat()
         else:
-            d["dateTime"] = getattr(c_event, param).replace(tzinfo=timezone.utc).isoformat()
+            dt = getattr(c_event, param)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            d["dateTime"] = dt.isoformat()
         g_dict[param] = d
 
     return g_dict
