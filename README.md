@@ -40,7 +40,9 @@ Then, to install all requirements :
 
 Configuration is strored in a JSON file. You can difine your calendars and several rules to apply for the synchronization.
 
-In this simple example, we will define two Google and one Exchange calendar. The rule tells calsync to add all events from both "perso" and "work" calendars to "common".
+In this example, we will define two Google, one Exchange and one ICS calendar.  
+The first rule tells calsync to add all events from both "perso" and "work" calendars to "common".  
+Then, the second rule will make a copy of all events in "common" in a local ics file.
 ```json
   "definitions":{
     "perso":{
@@ -56,6 +58,10 @@ In this simple example, we will define two Google and one Exchange calendar. The
       "server":"domain.server.com",
       "username":"DOMAIN\\user.name",
       "address":"user.name@server.com"
+    },
+    "localcopy":{
+      "type":"ics",
+      "path":"out.ics"
     }
   },
   "rules":[
@@ -63,6 +69,11 @@ In this simple example, we will define two Google and one Exchange calendar. The
       "operation": "union",
       "operands": ["work", "perso"],
       "destination": "common"
+    },
+    {
+      "operation": "union",
+      "operands": ["common"],
+      "destination": "localcopy"
     }
   ]
 }
