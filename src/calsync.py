@@ -67,6 +67,10 @@ if __name__ == "__main__":
                         default=False)
     args = parser.parse_args()
 
+    print("Calsync v1.0\n",
+          "    Joaquim Perez\n",
+          "    Haute-École Arc - Ingéniere\n",
+          "    27.01.2017")
     if args.justonce:
         run(args.path)
     else:
