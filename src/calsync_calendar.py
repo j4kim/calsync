@@ -1,31 +1,33 @@
 import os
 
 class CalsyncCalendar:
-    """Classe représentant un calendrier abstrait"""
+    """
+    Abstract class representing a calendar
+    Implementations are ExchangeCalendar, GoogleCalendar and IcsCalendar
+    Not really abstract because we can instanciate a CalsyncCalendar,
+    but it will be on a "bridge" purpose
+    """
 
     def __init__(self, name):
-        # dictionnaire avec clé:calsync_id d'un event et valeur:objet CalsyncEvent
+        # dictrionnary containing CalsyncEvent objects referenced by calync_id as key
         self.events = {}
+        # set containing calsync ids of events that have to be deleted in this calendar
         self.deleted = set()
         self.name = name
 
     def read_events(self):
+        """Read all events in a calendar and then check if events have been deleted since last sync"""
+        # will call the specific implementation in inherited classes
         self.read_events()
+        # check and mark wich events have been deleted
         self.check_deleted()
 
-    def __repr__(self):
-        s = "{:_^53}".format(" CALENDAR {} ".format(self.name))
-        s += "\n{:^53}\n".format(self.__class__.__name__)
-        s += "{:^25} + {:^25}".format(" date ", " subject ")
-        if not self.events:
-            s += '\nNo events found.'
-        for id, event in self.events.items():
-            s += "\n{:<25} : {}".format(str(event.start), event.subject)
-        return s + '\n'
-
-    # add all events of other_cal to self (only if events are new or updated)
     def join(self, other_cal):
-        self.deleted = self.deleted | other_cal.deleted
+        """
+        Add all events of other_cal to self (only if events are not already in self or is a newer version)
+        Also update the self.deleted set to repercute suppression from src cal to dest
+        """
+        self.deleted = self.deleted | other_cal.deleted # the | operator returns the union of sets
         for id, event in other_cal.events.items():
             self.add(event)
 
@@ -69,14 +71,18 @@ class CalsyncCalendar:
         # add (or replace by) the source event in the destination calendar
         self.events[id] = src_event
 
-    # insert or update events
     def write_events(self):
+        """
+        Delete events that have been deleted in source,
+        then write new or updated events.
+        """
         for id in self.deleted:
             self.delete_event(id)
         for id, event in self.events.items():
             self.write_event(event)
 
     def write_event(self, event):
+        """Create or update event if necessary"""
         if event.is_new:
             self.create_event(event)
             print('Event "{}" created'.format(event.subject))
@@ -88,10 +94,25 @@ class CalsyncCalendar:
             # print('Nothing to do with event "{}"'.format(event.subject))
 
     def override_subject(self, new_subject):
+        """Replace all subjects in self events by the string given new_subject"""
         for id, event in self.events.items():
             event.subject = new_subject
 
     def check_deleted(self):
+        """
+        Compare the ids in self.events with those stored in the .cals/calname file.
+        If an id is in the stored file but not in self, that means the event has been deleted,
+        the id is inserted in the self.deleted set.
+        Then, rewrite the file with current events ids.
+        If the file does not exists, it means this is the first time we see this calendar,
+        we just create the file with current ids
+        """
+
+        # create the .cals folder if it doesnt exists
+        if not os.path.exists(".cals"):
+            os.mkdir(".cals")
+
+        # get all the ids of current events
         ids = set(self.events.keys())
         try:
             # open the file in read mode
@@ -107,10 +128,19 @@ class CalsyncCalendar:
             # it's ok, nothing to do
             pass
 
-        try: os.mkdir(".cals")
-        except FileExistsError: pass
-
         # re-open the file in write mode
         cal_file_w = open(".cals/" + self.name, 'w')
+        # write every ids separated with new lines
         [cal_file_w.write(id + '\n') for id in self.events.keys()]
         cal_file_w.close()
+
+    def __repr__(self):
+        """Return a pretty representation of the calendar's events"""
+        s = "{:_^53}".format(" CALENDAR {} ".format(self.name))
+        s += "\n{:^53}\n".format(self.__class__.__name__)
+        s += "{:^25} + {:^25}".format(" date ", " subject ")
+        if not self.events:
+            s += '\nNo events found.'
+        for id, event in self.events.items():
+            s += "\n{:<25} : {}".format(str(event.start), event.subject)
+        return s + '\n'

@@ -6,28 +6,29 @@ from calsync_event import CalsyncEvent
 
 
 class GoogleEvent(CalsyncEvent):
+    """Implementation of CalsyncEvent that reads a google representation and convert it to calsync"""
+
     def __init__(self, g_dict):
-        """Initialise a CalsyncEvent from a google dictionnary retrieved by the Google API"""
+        """Initialize a CalsyncEvent from a google dictionnary retrieved by the Google API"""
 
         CalsyncEvent.__init__(self)
-        # for k,v in g_dict.items():
-        #     setattr(self, k, v)
 
         self.id = g_dict["iCalUID"]
         self.subject = g_dict["summary"]
         self.google_id = g_dict["id"]
 
-        # converti la str en datetime
+        # convert the string in a datetime object
         self.updated = dateutil.parser.parse(g_dict["updated"])
         for param in ["start", "end"]:
-            # les events Google contiennent soit une date, soit une datetime pour les propriétés start et end
+            # Google Calendar's events can contain either a date
+            # or a datetime object for the start and end properties
+            # if it's a date, that means the event is all day
             if "dateTime" in g_dict[param]:
-                # convertit la string en datetime
                 dt = dateutil.parser.parse(g_dict[param]["dateTime"])
                 setattr(self, param, dt)
                 self.is_all_day = False
             elif "date" in g_dict[param]:
-                # convertit la string en datetime, puis ne récupère que la date
+                # convert the string in a datetime object, then gets only the date
                 d = dateutil.parser.parse(g_dict[param]["date"]).date()
                 setattr(self, param, d)
                 self.is_all_day = True

@@ -2,7 +2,9 @@ from calsync_calendar import CalsyncCalendar
 from ics_calendar import IcsCalendar
 from google_calendar import GoogleCalendar
 from exchange_calendar import ExchangeCalendar
-import json
+from datetime import datetime
+import json, argparse, time
+
 
 def run(config_file):
     """Run the synchronisation process depending on the conguration file"""
@@ -54,9 +56,6 @@ def run(config_file):
 
 
 if __name__ == "__main__":
-    import argparse, time
-    from datetime import datetime
-
     parser = argparse.ArgumentParser()
     parser.add_argument("path",
                         help="Configuration file name")
@@ -70,16 +69,16 @@ if __name__ == "__main__":
                         default=False)
     args = parser.parse_args()
 
-    print("Calsync v1.0\n",
-          "    Joaquim Perez\n",
-          "    Haute-École Arc - Ingéniere\n",
-          "    27.01.2017")
+    # pretty credits print
+    for info in ["", " Calsync v1.0 ", " Joaquim Perez ", " Haute-École Arc - Ingéniere ", " 27.01.2017 ", ""]:
+        print("{:~^53}".format("{}".format(info)))
+
     if args.justonce:
         run(args.path)
     else:
         # run synchronisation, then wait 5 minutes and rerun it, etc... until the user quit the program
         while True:
-            print("Calsync syncing {}".format(datetime.now().strftime("%A the %d. %B %Y at %H:%M:%S")))
+            print("Calsync syncing {}".format(datetime.now().strftime("the %d.%m.%Y at %H:%M:%S")))
             run(args.path)
             print("Wait {} seconds\n\n".format(args.refreshtime))
             time.sleep(args.refreshtime)

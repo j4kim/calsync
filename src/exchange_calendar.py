@@ -10,7 +10,12 @@ from simplecrypt import encrypt, decrypt
 from getpass import getpass
 
 class ExchangeCalendar(CalsyncCalendar):
+    """Implementation of CalsyncCalendar that connects to Exchange and can manage events"""
+
     def __init__(self, name, server, username, address):
+        """Initialize an Exchange calendar and try to connect to the Exchange account according to the
+        arguments given. The password will be prompted the first time, then it will be encrypted
+        and stored in a ".exchange_pwd" file"""
         CalsyncCalendar.__init__(self, name)
 
         try:
@@ -32,9 +37,13 @@ class ExchangeCalendar(CalsyncCalendar):
             print("connexion au compte {} impossible".format(username), file=sys.stderr)
             os.remove(".exchange_pwd")
             sys.exit()
+        # calls the calsync_calendar.read_events method
         super().read_events()
 
     def read_events(self):
+        """Read all items from the Exchange account's calendar folder
+        The events read are CalendarItem objects, we convert them to ExchangeEvents objects,
+        which are CalsyncEvent objects"""
         all_items = self.account.calendar.all()
         for item in all_items:
             x = ExchangeEvent(item)
