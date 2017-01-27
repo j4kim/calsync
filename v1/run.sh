@@ -1,1 +1,0 @@
-python calsync.py configurations/g_to_g.conf.json -t 10
