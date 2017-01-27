@@ -2,7 +2,7 @@ from calsync_calendar import CalsyncCalendar
 from ics_calendar import IcsCalendar
 from google_calendar import GoogleCalendar
 from exchange_calendar import ExchangeCalendar
-import json, sys
+import json
 
 def run(config_file):
     """Run the synchronisation process depending on the conguration file"""
@@ -55,7 +55,7 @@ def run(config_file):
 
 if __name__ == "__main__":
     import argparse, time
-    from datetime import datetime, sys
+    from datetime import datetime
 
     parser = argparse.ArgumentParser()
     parser.add_argument("path",
