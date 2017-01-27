@@ -15,22 +15,22 @@ Dependecies :
 * [simple-crypt](https://pypi.python.org/pypi/simple-crypt)
 
 If you want to create a vitrualenv for the project :
-> pip install virtualenv
-> sudo virtualenv -p python3 venv
-> source venv/bin/activate
+> `pip install virtualenv`  
+> `sudo virtualenv -p python3 venv`  
+> `source venv/bin/activate`
 
 Then, to install all requirements : 
-> pip install -r requirements.txt
+> `pip install -r requirements.txt`  
 
 If you have issues installing simple-crypt, try :
-> apt-get install python3-dev
+> `apt-get install python3-dev`  
 
 ## Run
 
-> python calsync.py \<configuration_file>
+> `python calsync.py \<configuration_file>`  
 
 for more informations on arguments :
-> python calsync.py --help
+> `python calsync.py --help`  
 
 ## Edit configuration file
 
