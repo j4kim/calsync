@@ -43,7 +43,7 @@ In this simple example, we will define two Google and one Exchange calendar. The
     "common":{
       "type":"google",
       "id":"3mnnljsfhcu14k8n398h9o4oh8@group.calendar.google.com"
-    }
+    },
     "work":{
       "type":"exchange",
       "server":"domain.server.com",
