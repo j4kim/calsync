@@ -25,14 +25,13 @@ If you don't see `Python 3.x.y`, You can either :
 * Create an alias like : `alias python=python3`
 
 Now you need to install dependencies.  
-I recommand to create a virtual environment to avoid packages versions conflicts.
-In the project directory, run :
+I recommand to create a virtual environment to avoid packages versions conflicts.  
+In the project directory, run :  
 > `python -m venv venv`  
-Then activate the venv : on Linux/Mac OS :  
-Linux/Mac OS
-> `source venv/bin/activate`  
-Windows
-> `venv\Scripts\activate.bat`  
+
+Then activate the venv :  
+> `source venv/bin/activate` (Linux/Mac OS)   
+> `venv\Scripts\activate.bat` (Windows)  
 
 Then, to install all requirements : 
 > `pip install -r requirements.txt` (prefix with `sudo` or run as admin if needed)
