@@ -22,12 +22,9 @@ If you want to create a vitrualenv for the project :
 Then, to install all requirements : 
 > `pip install -r requirements.txt`  
 
-If you have issues installing simple-crypt, try :
-> `apt-get install python3-dev`  
-
 ## Run
 
-> `python calsync.py \<configuration_file>`  
+> `python calsync.py <configuration_file>`  
 
 for more informations on arguments :
 > `python calsync.py --help`  
@@ -36,28 +33,31 @@ for more informations on arguments :
 
 Configuration is strored in a JSON file. You can difine your calendars and several rules to apply for the synchronization.
 
-In this simple example, you will define a Google and an Exchange calendar. The rule tells calsync to add all events from Exchange to Google.
+In this simple example, we will define two Google and one Exchange calendar. The rule tells calsync to add all events from both "perso" and "work" calendars to "common".
 ```json
   "definitions":{
-    "G":{
+    "perso":{
       "type":"google",
-      "id":"<primary|calendar id>"
+      "id":"primary"
     },
-    "E":{
+    "common":{
+      "type":"google",
+      "id":"3mnnljsfhcu14k8n398h9o4oh8@group.calendar.google.com"
+    }
+    "work":{
       "type":"exchange",
-      "server":"<exchange server>",
-      "username":"<DOMAIN>\\<username>",
-      "address":"<email address>"
+      "server":"domain.server.com",
+      "username":"DOMAIN\\user.name",
+      "address":"user.name@server.com"
     }
   },
   "rules":[
     {
       "operation": "union",
-      "operands": ["E"],
-      "destination": "G"
+      "operands": ["work", "perso"],
+      "destination": "common"
     }
   ]
 }
 ```
 
-You can find config examples in the `configurations` directory.
