@@ -45,6 +45,7 @@ The first rule tells calsync to add all events from both "perso" and "work" cale
 Then, the second rule will make a copy of all events in "common" into a local ics file.
 
 ```json
+{
   "definitions":{
     "perso":{
       "type":"google",
