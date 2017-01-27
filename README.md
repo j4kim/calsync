@@ -43,6 +43,7 @@ Configuration is strored in a JSON file. You can difine your calendars and sever
 In this example, we will define two Google, one Exchange and one ICS calendar.  
 The first rule tells calsync to add all events from both "perso" and "work" calendars to "common".  
 Then, the second rule will make a copy of all events in "common" into a local ics file.
+
 ```json
   "definitions":{
     "perso":{
@@ -81,16 +82,21 @@ Then, the second rule will make a copy of all events in "common" into a local ic
 
 ### Anonymous events  
 
-In a rule, you can add a custom "subject" entry. That will tell Calsync to override all events name by the subject given. Example :
+In a rule, you can add a custom "subject" entry. That will tell Calsync to override all events name by the subject given.  
+Example :
 ```json
-    "rules":[{ "operation": "union", "operands": ["A", "B"], "destination": "C",
+    "rules":[{
+      "operation": "union",
+      "operands": ["personnal"],
+      "destination": "common",
       "subject": "Joaquim is busy"
     }]
 ```
 
 ### About Google Calendars
 
-Google calendars are referenced by id, you can find this id in your calendar's settings. The keyword "primary" references the default calendar of the Google Account. You can't use several Google Account, but you can share calendars between accounts that need to sync.  
+Google calendars are referenced by a Google-specific id, you can find this id in your calendar's settings.  
+The keyword "primary" references the default calendar of the Google Account. You can't use several Google Accounts, but you can share calendars between accounts that need to sync.  
 If you want to switch account, just remove the generated directory `~/.credentials`, in your user home folder. 
 
 ## Run
