@@ -20,14 +20,7 @@ If you want to create a vitrualenv for the project :
 > `source venv/bin/activate`
 
 Then, to install all requirements : 
-> `pip install -r requirements.txt`  
-
-## Run
-
-> `python calsync.py <configuration_file>`  
-
-for more informations on arguments :
-> `python calsync.py --help`  
+> `sudo pip install -r requirements.txt`  
 
 ## Edit configuration file
 
@@ -61,3 +54,14 @@ In this simple example, we will define two Google and one Exchange calendar. The
 }
 ```
 
+## Run
+
+Be sure to use python 3 :  
+> `python --version`
+
+> `python src/calsync.py calsync.conf.json`  
+
+for more informations on arguments :
+> `python src/calsync.py --help`
+
+You can also use `run.sh` or `run.bat` for quick run.
