@@ -78,7 +78,18 @@ Then, the second rule will make a copy of all events in "common" into a local ic
   ]
 }
 ```
+
+### Anonymous events  
+
+In a rule, you can add a custom "subject" entry. That will tell Calsync to override all events name by the subject given. Example :
+```json
+    "rules":[{ "operation": "union", "operands": ["A", "B"], "destination": "C",
+      "subject": "Joaquim is busy"
+    }]
+```
+
 ### About Google Calendars
+
 Google calendars are referenced by id, you can find this id in your calendar's settings. The keyword "primary" references the default calendar of the Google Account. You can't use several Google Account, but you can share calendars between accounts that need to sync.  
 If you want to switch account, just remove the generated directory `~/.credentials`, in your user home folder. 
 
