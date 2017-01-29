@@ -45,6 +45,10 @@ class OnlineIcsCalendar(IcsCalendar):
     def __init__(self, name, ics_url):
         CalsyncCalendar.__init__(self, name)
         import urllib
+
+        if ics_url.startswith("webcal"):
+            ics_url = ics_url.replace("webcal", "http", 1)
+
         try:
             self.load(urllib.request.urlopen(ics_url).read())
         except urllib.error.HTTPError as e:
