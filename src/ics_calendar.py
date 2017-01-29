@@ -54,4 +54,5 @@ class OnlineIcsCalendar(IcsCalendar):
         except urllib.error.HTTPError as e:
             print(e, name)
 
-
+    def write_events(self):
+        print("Warning : Online ICS Calendars are read-only, you cannot use them as an output calendar")

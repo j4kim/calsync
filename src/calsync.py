@@ -1,4 +1,4 @@
-from calsync_calendar import CalsyncCalendar
+from calsync_calendar import VirtualCalendar
 from ics_calendar import IcsCalendar, OnlineIcsCalendar
 from google_calendar import GoogleCalendar
 from exchange_calendar import ExchangeCalendar
@@ -18,17 +18,20 @@ def run(config_file):
         # create calendars from the definitions in config
         for key, params in config["definitions"].items():
             if params["type"] == "ics":
-                calendars[key] = IcsCalendar(key, params.get("path", key+".ics"))
-            if params["type"] == "online":
-                calendars[key] = OnlineIcsCalendar(key, params["url"])
+                if "url" in params:
+                    calendars[key] = OnlineIcsCalendar(key, params["url"])
+                else:
+                    calendars[key] = IcsCalendar(key, params["path"])
             elif params["type"] == "google":
                 calendars[key] = GoogleCalendar(key, params.get("id","primary"), params.get("futureOnly", False))
             elif params["type"] == "exchange":
                 calendars[key] = ExchangeCalendar(key, params["server"], params["username"], params["address"])
-            else:
+            elif params["type"] == "virtual":
                 # create a virtual calendar (not linked to any API)
-                calendars[key] = CalsyncCalendar(key)
-                print("Warning : unknown type " + params["type"] + ", virtual calendar created")
+                calendars[key] = VirtualCalendar(key)
+            else:
+                print("Configuration error : unknown type " + params["type"])
+                sys.exit()
         print("{:*<53}".format("Definitions "))
         # print all events of each calendars
         for k, cal in calendars.items():

@@ -144,3 +144,11 @@ class CalsyncCalendar:
         for id, event in self.events.items():
             s += "\n{:<25} : {}".format(str(event.start), event.subject)
         return s + '\n'
+
+
+class VirtualCalendar(CalsyncCalendar):
+    def __init__(self, name):
+        CalsyncCalendar.__init__(self, name)
+
+    def write_events(self):
+        print("Warning : trying to write envents on a virtual Calendar")
