@@ -13,9 +13,9 @@ class GoogleEvent(CalsyncEvent):
 
         CalsyncEvent.__init__(self)
 
-        self.id = g_dict["iCalUID"]
-        self.subject = g_dict["summary"]
-        self.google_id = g_dict["id"]
+        self.id = g_dict.get("iCalUID")
+        self.subject = g_dict.get("summary","")
+        self.google_id = g_dict.get("id", None)
 
         # convert the string in a datetime object
         self.updated = dateutil.parser.parse(g_dict["updated"])

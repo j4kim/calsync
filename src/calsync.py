@@ -1,9 +1,9 @@
 from calsync_calendar import CalsyncCalendar
-from ics_calendar import IcsCalendar
+from ics_calendar import IcsCalendar, OnlineIcsCalendar
 from google_calendar import GoogleCalendar
 from exchange_calendar import ExchangeCalendar
 from datetime import datetime
-import json, argparse, time
+import json, argparse, time, sys
 
 
 def run(config_file):
@@ -18,9 +18,11 @@ def run(config_file):
         # create calendars from the definitions in config
         for key, params in config["definitions"].items():
             if params["type"] == "ics":
-                calendars[key] = IcsCalendar(key, params["path"])
+                calendars[key] = IcsCalendar(key, params.get("path", key+".ics"))
+            if params["type"] == "online":
+                calendars[key] = OnlineIcsCalendar(key, params["url"])
             elif params["type"] == "google":
-                calendars[key] = GoogleCalendar(key, params["id"])
+                calendars[key] = GoogleCalendar(key, params.get("id","primary"), params.get("futureOnly", False))
             elif params["type"] == "exchange":
                 calendars[key] = ExchangeCalendar(key, params["server"], params["username"], params["address"])
             else:
@@ -56,6 +58,8 @@ def run(config_file):
 
 
 if __name__ == "__main__":
+    # run("calsync.conf.json")
+    # sys.exit()
     parser = argparse.ArgumentParser()
     parser.add_argument("path",
                         help="Configuration file name")

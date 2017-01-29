@@ -9,10 +9,10 @@ class IcsEvent(CalsyncEvent):
     def __init__(self, component):
         CalsyncEvent.__init__(self)
 
-        self.subject = component.get("summary") + ""  # avoid vText()
+        self.subject = component.get("summary","") + ""  # avoid vText()
 
         for param in ["start","end"]:
-            d = component.get('dt'+param) # on ne sait pas si date ou datetime
+            d = component.get('dt'+param, 'dtstart') # on ne sait pas si date ou datetime
             ddd = vDDDTypes.from_ical(d) # retourne soit un objet date, soit un datetime
             if type(ddd) is datetime:
                 dt = ddd.replace(tzinfo=timezone.utc)

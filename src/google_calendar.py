@@ -1,4 +1,4 @@
-import sys
+import sys, datetime
 
 from calsync_calendar import CalsyncCalendar
 from google_api_tools import get_service
@@ -7,9 +7,10 @@ from google_event import GoogleEvent, to_google
 class GoogleCalendar(CalsyncCalendar):
     """Implementation of CalsyncCalendar able to communicate with the Google Calendar API"""
 
-    def __init__(self, name, id="primary"):
+    def __init__(self, name, id="primary", future_only=False):
         """Initialize a Google calendar and launch the authentication flow"""
         CalsyncCalendar.__init__(self, name)
+        self.future_only = future_only
         self.id = id
         # authorize the user and construct a resource for interacting with the API
         self.service = get_service()
@@ -18,8 +19,10 @@ class GoogleCalendar(CalsyncCalendar):
 
     def read_events(self):
         """Reads all the events from the Google Calendar API, then convert them to a CalsyncEvent representation"""
+        now = datetime.datetime.utcnow().isoformat() + 'Z' if self.future_only else None
         try:
             eventsResult = self.service.events().list(
+                timeMin=now,
                 calendarId=self.id, singleEvents=True,
                 orderBy='startTime').execute()
         except:
